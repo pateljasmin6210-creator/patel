@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>સંપૂર્ણ સ્માર્ટ હાજરી પોર્ટલ</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #1e3c72, #2a5298); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        .container { width: 100%; max-width: 800px; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        h2, h3 { color: #1e3c72; text-align: center; margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; font-size: 14px; color: #333; }
+        input, select { width: 100%; padding: 10px; border: 1.5px solid #ccc; border-radius: 6px; outline: none; font-size: 14px; }
+        input:focus, select:focus { border-color: #1e3c72; }
+        .btn { background: #1e3c72; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; width: 100%; font-size: 15px; font-weight: bold; margin-top: 10px; }
+        .btn-green { background: #28a745; }
+        .btn-orange { background: #fd7e14; }
+        .btn-wa { background: #25d366; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-all-wa { background: #128c7e; color: white; margin-top: 15px; }
+        .toggle-link { text-align: center; margin-top: 15px; font-size: 14px; }
+        .toggle-link a { color: #2a5298; font-weight: bold; cursor: pointer; text-decoration: underline; }
+        .logout-btn { background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 4px; float: right; cursor: pointer; font-weight: bold; }
+        .card { background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px; }
+        .table-responsive { width: 100%; overflow-x: auto; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 6px; overflow: hidden; }
+        th, td { border: 1px solid #eef2f5; padding: 10px; text-align: center; font-size: 14px; }
+        th { background: #1e3c72; color: white; }
+        .badge { padding: 4px 8px; border-radius: 12px; font-weight: bold; font-size: 12px; }
+        .bg-green { background-color: #d4edda; color: #155724; }
+        .bg-red { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- 1. LOGIN -->
+    <div id="loginBox">
+        <h2>🔒 સેક્યુર લોગિન</h2>
+        <div class="form-group">
+            <label>તમારો રોલ પસંદ કરો:</label>
+            <select id="loginRole">
+                <option value="teacher">શિક્ષક (Teacher)</option>
+                <option value="student">વિદ્યાર્થી (Student)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>યુઝરનામ:</label>
+            <input type="text" id="loginUser" placeholder="યુઝરનામ લખો">
+        </div>
+        <div class="form-group">
+            <label>પાસવર્ડ:</label>
+            <input type="password" id="loginPass" placeholder="પાસવર્ડ લખો">
+        </div>
+        <button class="btn" onclick="login()">લોગિન કરો</button>
+        <div class="toggle-link">
+            એકાઉન્ટ નથી? <a onclick="showRegister()">નવું રજીસ્ટ્રેશન કરો</a>
+        </div>
+    </div>
+
+    <!-- 2. REGISTER -->
+    <div id="registerBox" style="display: none;">
+        <h2>📝 નવું સાઈન-અપ</h2>
+        <div class="form-group">
+            <label>તમે કોણ છો?:</label>
+            <select id="regRole" onchange="toggleRegFields()">
+                <option value="student">વિદ્યાર્થી (Student)</option>
+                <option value="teacher">શિક્ષક (Teacher)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>પૂરું નામ:</label>
+            <input type="text" id="regName" placeholder="નામ લખો">
+        </div>
+        <div class="form-group">
+            <label>યુઝરનામ:</label>
+            <input type="text" id="regUser" placeholder="યુઝરનામ બનાવો">
+        </div>
+        <div class="form-group">
+            <label>પાસવર્ડ:</label>
+            <input type="password" id="regPass" placeholder="પાસવર્ડ બનાવો">
+        </div>
+        <div class="form-group" id="stdGroup">
+            <label>ધોરણ:</label>
+            <select id="regStd">
+                <option value="Std 1">ધોરણ ૧</option><option value="Std 2">ધોરણ ૨</option>
+                <option value="Std 3">ધોરણ ૩</option><option value="Std 4">ધોરણ ૪</option>
+                <option value="Std 5">ધોરણ ૫</option><option value="Std 6">ધોરણ ૬</option>
+                <option value="Std 7">ધોરણ ૭</option><option value="Std 8">ધોરણ ૮</option>
+                <option value="Std 9">ધોરણ ૯</option><option value="Std 10">ધોરણ ૧૦</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>વોટ્સએપ નંબર:</label>
+            <input type="tel" id="regPhone" placeholder="10 અંકનો નંબર" maxlength="10">
+        </div>
+        <button class="btn btn-green" onclick="register()">સાઈન-અપ કરો</button>
+        <div class="toggle-link">
+            એકાઉન્ટ છે? <a onclick="showLogin()">લોગિન કરો</a>
+        </div>
+    </div>
+
+    <!-- 3. TEACHER DASHBOARD -->
+    <div id="teacherDashboard" style="display: none;">
+        <button class="logout-btn" onclick="logout()">લોગઆઉટ 🔒</button>
+        <h2>👨‍🏫 શિક્ષક પોર્ટલ</h2>
+        <p style="text-align:center; color:#555; margin-bottom:15px;">સ્વાગત છે, <b id="teacherNameDisplay"></b></p>
+
+        <!-- ADD STUDENT CARD -->
+        <div class="card">
+            <h3>➕ નવો વિદ્યાર્થી ઉમેરો</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="text" id="tAddName" placeholder="વિદ્યાર્થીનું નામ">
+                <input type="text" id="tAddUser" placeholder="યુઝરનામ">
+                <input type="password" id="tAddPass" placeholder="પાસવર્ડ">
+                <input type="tel" id="tAddPhone" placeholder="10 અંકનો વોટ્સએપ નંબર" maxlength="10">
+            </div>
+            <div style="margin-top: 10px;">
+                <select id="tAddStd">
+                    <option value="Std 1">ધોરણ ૧</option><option value="Std 2">ધોરણ ૨</option>
+                    <option value="Std 3">ધોરણ ૩</option><option value="Std 4">ધોરણ ૪</option>
+                    <option value="Std 5">ધોરણ ૫</option><option value="Std 6">ધોરણ ૬</option>
+                    <option value="Std 7">ધોરણ ૭</option><option value="Std 8">ધોરણ ૮</option>
+                    <option value="Std 9">ધોરણ ૯</option><option value="Std 10">ધોરણ ૧૦</option>
+                </select>
+            </div>
+            <button class="btn btn-green" onclick="addStudentByTeacher()">વિદ્યાર્થી ઉમેરો</button>
+        </div>
+
+        <!-- TAKE ATTENDANCE CARD -->
+        <div class="card">
+            <h3>📋 હાજરી પૂરો</h3>
+            <div class="form-group">
+                <select id="stdSelect" onchange="loadStudentsForAttendance()">
+                    <option value="">-- ધોરણ પસંદ કરો --</option>
+                    <option value="Std 1">ધોરણ ૧</option><option value="Std 2">ધોરણ ૨</option>
+                    <option value="Std 3">ધોરણ ૩</option><option value="Std 4">ધોરણ ૪</option>
+                    <option value="Std 5">ધોરણ ૫</option><option value="Std 6">ધોરણ ૬</option>
+                    <option value="Std 7">ધોરણ ૭</option><option value="Std 8">ધોરણ ૮</option>
+                    <option value="Std 9">ધોરણ ૯</option><option value="Std 10">ધોરણ ૧૦</option>
+                </select>
+            </div>
+            <div id="attendanceArea" style="display:none;">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>નામ</th>
+                                <th>હાજરી Status</th>
+                                <th>WhatsApp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody"></tbody>
+                    </table>
+                </div>
+                <button class="btn btn-green" onclick="saveAttendance()">💾 આજની હાજરી સેવ કરો</button>
+                <button class="btn btn-all-wa" onclick="sendAllWhatsApp()">📲 બધા વાલીઓને WhatsApp મેસેજ મોકલો</button>
+            </div>
+        </div>
+
+        <!-- REPORT CARD -->
+        <div class="card">
+            <h3>📊 હાજરી રિપોર્ટ (Attendance Report)</h3>
+            <button class="btn btn-orange" onclick="generateReport()">📑 તમામ ધોરણનો રિપોર્ટ જુઓ</button>
+            <div id="reportResult" class="table-responsive"></div>
+        </div>
+    </div>
+
+    <!-- 4. STUDENT DASHBOARD -->
+    <div id="studentDashboard" style="display: none;">
+        <button class="logout-btn" onclick="logout()">લોગઆઉટ 🔒</button>
+        <h2>🎓 વિદ્યાર્થી પોર્ટલ</h2>
+        <br>
+        <p>સ્વાગત છે, <b id="stDisplayName" style="color: #1e3c72;"></b></p>
+        <p>ધોરણ: <b id="stDisplayStd"></b></p>
+        <br>
+        <div class="card">
+            <h3>📈 તમારો હાજરી રિપોર્ટ</h3>
+            <div id="studentPersonalReport"></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    var appUsers = JSON.parse(localStorage.getItem('appUsers')) || [];
+    var appAttendance = JSON.parse(localStorage.getItem('appAttendance')) || [];
+    var currentClassStudents = [];
+
+    function saveData() {
+        localStorage.setItem('appUsers', JSON.stringify(appUsers));
+        localStorage.setItem('appAttendance', JSON.stringify(appAttendance));
+    }
+
+    function showRegister() { document.getElementById("loginBox").style.display = "none"; document.getElementById("registerBox").style.display = "block"; }
+    function showLogin() { document.getElementById("registerBox").style.display = "none"; document.getElementById("loginBox").style.display = "block"; }
+
+    function toggleRegFields() {
+        var role = document.getElementById("regRole").value;
+        document.getElementById("stdGroup").style.display = (role === "student") ? "block" : "none";
+    }
+
+    function register() {
+        var role = document.getElementById("regRole").value;
+        var name = document.getElementById("regName").value.trim();
+        var user = document.getElementById("regUser").value.trim().toLowerCase();
+        var pass = document.getElementById("regPass").value.trim();
+        var phone = document.getElementById("regPhone").value.trim();
+        var std = document.getElementById("regStd").value;
+
+        if(!name || !user || !pass || !phone) return alert("બધી વિગત ભરો!");
+
+        if(appUsers.some(u => u.user === user)) {
+            return alert("આ યુઝરનામ વપરાઈ ગયું છે, બીજું પસંદ કરો!");
+        }
+
+        appUsers.push({ role, name, user, pass, phone, std: role === "student" ? std : "" });
+        saveData();
+        alert("સાઈન-અપ થઈ ગયું! હવે લોગિન કરો.");
+        
+        // Auto Fill Login Fields for Easy Access
+        document.getElementById("loginRole").value = role;
+        document.getElementById("loginUser").value = user;
+        document.getElementById("loginPass").value = pass;
+        
+        showLogin();
+    }
+
+    function login() {
+        var role = document.getElementById("loginRole").value;
+        var user = document.getElementById("loginUser").value.trim().toLowerCase();
+        var pass = document.getElementById("loginPass").value.trim();
+
+        // Admin Account
+        if(role === 'teacher' && user === 'admin' && pass === 'admin') {
+            openTeacherDashboard("મુખ્ય શિક્ષક (Admin)");
+            return;
+        }
+
+        var found = appUsers.find(u => u.user.toLowerCase() === user && u.pass === pass && u.role === role);
+
+        if(!found) {
+            alert("ખોટો યુઝરનામ, પાસવર્ડ અથવા રોલ! (મહત્વપૂર્ણ: લોગિન વખતે સાચો 'રોલ' જેમકે શિક્ષક કે વિદ્યાર્થી પસંદ કરો)");
+            return;
+        }
+
+        if(role === "teacher") {
+            openTeacherDashboard(found.name);
+        } else {
+            openStudentDashboard(found);
+        }
+    }
+
+    function openTeacherDashboard(name) {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("teacherDashboard").style.display = "block";
+        document.getElementById("teacherNameDisplay").innerText = name;
+    }
+
+    function openStudentDashboard(student) {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("studentDashboard").style.display = "block";
+        document.getElementById("stDisplayName").innerText = student.name;
+        document.getElementById("stDisplayStd").innerText = student.std;
+        loadStudentReport(student.user);
+    }
+
+    function addStudentByTeacher() {
+        var name = document.getElementById("tAddName").value.trim();
+        var user = document.getElementById("tAddUser").value.trim().toLowerCase();
+        var pass = document.getElementById("tAddPass").value.trim();
+        var phone = document.getElementById("tAddPhone").value.trim();
+        var std = document.getElementById("tAddStd").value;
+
+        if(!name || !user || !pass || !phone) return alert("વિદ્યાર્થીની બધી વિગતો ભરો!");
+
+        if(appUsers.some(u => u.user === user)) {
+            return alert("આ યુઝરનામ પહેલેથી છે!");
+        }
+
+        appUsers.push({ role: "student", name, user, pass, phone, std });
+        saveData();
+        alert("વિદ્યાર્થી સફળતાપૂર્વક ઉમેરાઈ ગયો!");
+
+        document.getElementById("tAddName").value = "";
+        document.getElementById("tAddUser").value = "";
+        document.getElementById("tAddPass").value = "";
+        document.getElementById("tAddPhone").value = "";
+
+        if(document.getElementById("stdSelect").value === std) {
+            loadStudentsForAttendance();
+        }
+    }
+
+    function loadStudentsForAttendance() {
+        var selectedStd = document.getElementById("stdSelect").value;
+        if(!selectedStd) {
+            document.getElementById("attendanceArea").style.display = "none";
+            return;
+        }
+
+        currentClassStudents = appUsers.filter(u => u.role === "student" && u.std === selectedStd);
+        var tbody = document.getElementById("studentTableBody");
+        tbody.innerHTML = "";
+
+        if(currentClassStudents.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='3'>આ ધોરણમાં કોઈ વિદ્યાર્થી નથી. ઉપરથી ઉમેરો!</td></tr>";
+        } else {
+            currentClassStudents.forEach((st, idx) => {
+                tbody.innerHTML += `<tr>
+                    <td><b>${st.name}</b></td>
+                    <td>
+                        <select id="att_${idx}">
+                            <option value="હાજર">✅ હાજર</option>
+                            <option value="ગેરહાજર">❌ ગેરહાજર</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn-wa" onclick="sendWhatsApp('${st.name}', '${st.phone}', ${idx})">📲</button>
+                    </td>
+                </tr>`;
+            });
+        }
+        document.getElementById("attendanceArea").style.display = "block";
+    }
+
+    function saveAttendance() {
+        if(currentClassStudents.length === 0) return alert("કોઈ વિદ્યાર્થી નથી!");
+
+        var today = new Date().toLocaleDateString('gu-IN');
+
+        currentClassStudents.forEach((st, idx) => {
+            var status = document.getElementById(`att_${idx}`).value;
+            appAttendance.push({ user: st.user, name: st.name, std: st.std, date: today, status: status });
+        });
+
+        saveData();
+        alert("આજની હાજરી સેવ થઈ ગઈ છે!");
+    }
+
+    function sendWhatsApp(name, phone, idx) {
+        var att = document.getElementById(`att_${idx}`).value;
+        var today = new Date().toLocaleDateString('gu-IN');
+        var msg = `આજનો હાજરી રિપોર્ટ (${today}):%0A👤 વિદ્યાર્થી: *${name}*%0A📌 સ્થિતિ: *${att}*`;
+        window.open(`https://api.whatsapp.com/send?phone=91${phone}&text=${msg}`, '_blank');
+    }
+
+    function sendAllWhatsApp() {
+        if(currentClassStudents.length === 0) return alert("કોઈ વિદ્યાર્થી નથી!");
+        
+        var today = new Date().toLocaleDateString('gu-IN');
+        
+        currentClassStudents.forEach((st, idx) => {
+            var att = document.getElementById(`att_${idx}`).value;
+            var msg = `આજનો હાજરી રિપોર્ટ (${today}):%0A👤 વિદ્યાર્થી: *${st.name}*%0A📌 સ્થિતિ: *${att}*`;
+            
+            setTimeout(() => {
+                window.open(`https://api.whatsapp.com/send?phone=91${st.phone}&text=${msg}`, '_blank');
+            }, idx * 800);
+        });
+    }
+
+    function generateReport() {
+        var students = appUsers.filter(u => u.role === "student");
+
+        if(students.length === 0) {
+            document.getElementById("reportResult").innerHTML = "<p style='text-align:center; margin-top:10px;'>હજી સુધી કોઈ વિદ્યાર્થી નથી.</p>";
+            return;
+        }
+
+        var html = `<table>
+            <thead>
+                <tr>
+                    <th>નામ</th>
+                    <th>ધોરણ</th>
+                    <th>કુલ દિવસો</th>
+                    <th>હાજર</th>
+                    <th>ગેરહાજર</th>
+                    <th>ટકા (%)</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        students.forEach(st => {
+            var records = appAttendance.filter(a => a.user === st.user);
+            var total = records.length;
+            var present = records.filter(a => a.status === 'હાજર').length;
+            var absent = records.filter(a => a.status === 'ગેરહાજર').length;
+            var pct = total > 0 ? ((present / total) * 100).toFixed(1) : "0";
+
+            html += `<tr>
+                <td><b>${st.name}</b></td>
+                <td>${st.std}</td>
+                <td>${total}</td>
+                <td><span class="badge bg-green">${present}</span></td>
+                <td><span class="badge bg-red">${absent}</span></td>
+                <td><b>${pct}%</b></td>
+            </tr>`;
+        });
+
+        html += `</tbody></table>`;
+        document.getElementById("reportResult").innerHTML = html;
+    }
+
+    function loadStudentReport(user) {
+        var records = appAttendance.filter(a => a.user === user);
+        var total = records.length;
+        var present = records.filter(a => a.status === 'હાજર').length;
+        var absent = records.filter(a => a.status === 'ગેરહાજર').length;
+
+        var html = `<div style="display:flex; justify-content:space-around; background:#eee; padding:10px; border-radius:6px;">
+            <div>કુલ: <b>${total}</b></div>
+            <div style="color:green;">હાજર: <b>${present}</b></div>
+            <div style="color:red;">ગેરહાજર: <b>${absent}</b></div>
+        </div>`;
+
+        document.getElementById("studentPersonalReport").innerHTML = html;
+    }
+
+    function logout() {
+        document.getElementById("teacherDashboard").style.display = "none";
+        document.getElementById("studentDashboard").style.display = "none";
+        showLogin();
+    }
+</script>
+
+</body>
+</html>
